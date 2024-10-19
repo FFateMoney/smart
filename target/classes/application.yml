@@ -1,0 +1,30 @@
+server:
+  port: 8080
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  profiles:
+    active: dev
+  main:
+    allow-circular-references: true
+  datasource:
+    druid:
+      driver-class-name: ${smart.datasource.driver-class-name}
+      url: jdbc:mysql://${smart.datasource.host}:${smart.datasource.port}/${smart.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: ${smart.datasource.username}
+      password: ${smart.datasource.password}
+    type: com.alibaba.druid.pool.DruidDataSource
+mybatis:
+  #mapper配置文件
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.smart.pojo.entity
+  configuration:
+    #开启驼峰命名
+    map-underscore-to-camel-case: true
+logging:
+  level:
+    com:
+      smart:
+        mapper: debug
+        service: info
+        controller: info
