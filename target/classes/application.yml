@@ -1,6 +1,10 @@
 server:
   port: 8080
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   profiles:
@@ -28,3 +32,9 @@ logging:
         mapper: debug
         service: info
         controller: info
+smart:
+  jwt:
+    user-secret-key: 407Team
+    user-token-name: token
+    user-ttl: 7200000
+

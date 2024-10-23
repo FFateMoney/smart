@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "smart.jwt")
 @Data
-public class JWTProperties {
+public class JwtProperties {
 
     /**
      * 管理端员工生成jwt令牌相关配置
