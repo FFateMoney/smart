@@ -22,15 +22,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     @Autowired
     UserService userService;
-    @PostMapping
+    @PostMapping("/register")
     @ApiOperation("注册接口")
     public Result register(@RequestBody UserDto userDto) {
-        Boolean NotBeRegistered = userService.register(userDto);
+        Result result =  userService.register(userDto);
         //返回注册结果
-        if (NotBeRegistered) {
-            return Result.success();
-        }
-        else return Result.error(MessageConstant.ACCOUNT_ALREADY_EXISTS);
+        return result;
+    }
+
+    public Result login(@RequestBody UserDto userDto) {
+
+
+
+        return Result.success();
     }
 
 }

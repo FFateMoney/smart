@@ -12,8 +12,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication()
 @EnableTransactionManagement
 @Slf4j
-@MapperScan("com.smart.mapper")
-@ComponentScan({"com.smart.server.Impl","com.smart.controller.user"})
+//@MapperScan("com.smart.mapper")
+//@ComponentScan({"com.smart.*"})
+
 public class DemoApplication {
 
     public static void main(String[] args) {

@@ -1,9 +1,10 @@
 package com.smart.server;
 
+import com.smart.common.result.Result;
 import com.smart.pojo.dto.UserDto;
 
 public interface UserService {
-    Boolean register(UserDto userDto);
+    Result register(UserDto userDto);
 
 
 }

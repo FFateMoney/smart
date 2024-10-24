@@ -30,8 +30,10 @@ public class JwtInterceptor implements HandlerInterceptor {
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //判断当前拦截到的是Controller的方法还是其他资源
+        log.info("拦截到资源");
         if (!(handler instanceof HandlerMethod)) {
             //当前拦截到的不是动态方法，直接放行
+
             return true;
         }
         //TODO 弄清楚BaseContext是做什么的

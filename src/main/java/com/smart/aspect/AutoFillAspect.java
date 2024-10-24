@@ -15,12 +15,13 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Aspect
 @Component
 @Slf4j
 public class AutoFillAspect {
-    @Pointcut("execution(* com.smart.mapper.*.*(..)) && @annotation(com.smart.annotation.AutoFill) ")
+    @Pointcut("execution(* com.smart.mapper.*.*(..)) && @annotation(com.smart.annotation.AutoFill)")
     public void autoFill(){};
     @Before("autoFill()")
     public void doFill(JoinPoint joinPoint) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
@@ -37,13 +38,13 @@ public class AutoFillAspect {
         Method setUpdateTime = arg.getClass().getMethod("setUpdateTime", LocalDateTime.class);
         Method setCreateTime = arg.getClass().getMethod("setCreateTime", LocalDateTime.class);
 
-        if (value == OperationConstant.INSERT) {
+        if (OperationConstant.INSERT.equals(value)) {
 
             setCreateTime.invoke(arg, LocalDateTime.now());
 
             setUpdateTime.invoke(arg, LocalDateTime.now());
         }
-        else if (value == OperationConstant.UPDATE) {
+        else if (OperationConstant.UPDATE.equals(value)) {
 
             setUpdateTime.invoke(arg, LocalDateTime.now());
         }
