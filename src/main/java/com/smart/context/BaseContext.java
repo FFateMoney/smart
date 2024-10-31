@@ -1,17 +1,17 @@
 package com.smart.context;
 
 public class BaseContext {
-    public static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
+    public static ThreadLocal<String> threadLocal = new ThreadLocal<>();
 
-    public static void setCurrentId(Long id) {
-        threadLocal.set(id);
+    public static void setCurrentUserName(String userName) {
+        threadLocal.set(userName);
     }
 
-    public static Long getCurrentId() {
+    public static String getCurrentUserName() {
         return threadLocal.get();
     }
 
-    public static void removeCurrentId() {
+    public static void removeCurrentUserName() {
         threadLocal.remove();
     }
 

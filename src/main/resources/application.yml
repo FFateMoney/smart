@@ -38,4 +38,5 @@ smart:
     user-secret-key: 407Team
     user-token-name: token
     user-ttl: 7200000
-
+  ai:
+    url: ${smart.ai.url}

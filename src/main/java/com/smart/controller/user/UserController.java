@@ -3,17 +3,21 @@ package com.smart.controller.user;
 
 import com.smart.common.result.Result;
 import com.smart.constants.MessageConstant;
+import com.smart.pojo.dto.TalkDto;
 import com.smart.pojo.dto.UserDto;
+import com.smart.pojo.vo.TalkVo;
 import com.smart.server.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 @RestController
 @Api("用户控制接口")
@@ -30,11 +34,32 @@ public class UserController {
         return result;
     }
 
-    public Result login(@RequestBody UserDto userDto) {
-
-
-
-        return Result.success();
+    @GetMapping("login")
+    @ApiOperation("登入接口")
+    public Result login( UserDto userDto) {
+        log.info("开始登入:{}",userDto.getUsername());
+        return userService.login(userDto);
     }
+    @GetMapping("/talk")
+    @ApiOperation("选择聊天，实际上是获取聊天记录")
+    public Result selectTalk(@RequestAttribute("userId")Integer userId,@NonNull Integer talkId) {
+        TalkDto talkDto = new TalkDto(userId,talkId);
+        TalkVo talkHistory = userService.selectTalk(talkDto);
+        if (talkHistory != null) {
+            return Result.success(talkHistory);
+        }
+        else return Result.error(MessageConstant.TALK_NOT_EXIT);
+    }
+
+
+    @PutMapping("/talk")
+    @ApiOperation("对话接口")
+    public Result talk(String text) throws URISyntaxException, IOException, ParseException {
+        String response = userService.talk(text);
+
+        return Result.success(response);
+    }
+
+
 
 }

@@ -6,3 +6,5 @@ smart:
     database: smart
     username: fate
     password: 123456
+  ai:
+    url: http://127.0.0.1:5000/talk

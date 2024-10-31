@@ -13,7 +13,7 @@ import java.util.ArrayList;
 @Builder
 public class User {
     private int id;
-    private String userName;
+    private String username;
     private String password;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;

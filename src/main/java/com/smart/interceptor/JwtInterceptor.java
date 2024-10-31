@@ -36,16 +36,18 @@ public class JwtInterceptor implements HandlerInterceptor {
 
             return true;
         }
-        //TODO 弄清楚BaseContext是做什么的
+
         //1、从请求头中获取令牌
         String token = request.getHeader(jwtProperties.getUserTokenName());
         //2、校验令牌
         try {
             log.info("jwt校验:{}", token);
             Claims claims = JwtUtil.parseJWT(jwtProperties.getUserSecretKey(), token);
-            Long userId = Long.valueOf(claims.get("userId").toString());
-            BaseContext.setCurrentId(userId);
-            log.info("当前员工id:{}", userId);
+            Integer id = (Integer) claims.get("id");
+
+            log.info("当前用户为:{}", id);
+
+            request.setAttribute("userId", id);
             //3、通过，放行
             return true;
         } catch (Exception ex) {
