@@ -40,6 +40,13 @@ public class UserController {
         log.info("开始登入:{}",userDto.getUsername());
         return userService.login(userDto);
     }
+
+    @GetMapping("/talks")
+    @ApiOperation("获取所有聊天的标题")
+    public Result getAllTalks(@RequestAttribute("userId") int userId) {
+        return Result.success(userService.getTalks(userId));
+    }
+
     @GetMapping("/talk")
     @ApiOperation("选择聊天，实际上是获取聊天记录")
     public Result selectTalk(@RequestAttribute("userId")Integer userId,@NonNull Integer talkId) {
@@ -51,15 +58,11 @@ public class UserController {
         else return Result.error(MessageConstant.TALK_NOT_EXIT);
     }
 
-
     @PutMapping("/talk")
     @ApiOperation("对话接口")
-    public Result talk(String text) throws URISyntaxException, IOException, ParseException {
+    public Result talk(@RequestBody String text) throws URISyntaxException, IOException, ParseException {
         String response = userService.talk(text);
 
         return Result.success(response);
     }
-
-
-
 }

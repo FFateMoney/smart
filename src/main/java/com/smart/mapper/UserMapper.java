@@ -10,6 +10,8 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface UserMapper {
     //按用户名查询用户
@@ -22,11 +24,13 @@ public interface UserMapper {
     void createUser(User user);
 
     //用户登入
-
     @Select("select *from smart.user where username = #{username} and password = #{password}")
     User login(UserDto userDto);
 
     //根据用户id和对话id查询聊天记录
-    @Select("select (talk_history.context) from smart.talk_history where user_id = #{userId} and id = #{id}")
+    @Select("select (talk.context) from smart.talk where user_id = #{userId} and id = #{id}")
     TalkVo findTalkById(TalkDto talkDto);
+
+    @Select("select talk.id,talk.title from smart.talk where user_id = #{userId}")
+    List<TalkVo> getTalks(int userId);
 }

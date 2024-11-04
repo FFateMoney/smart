@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
         }
         else {
             Map<String, Object> claims = new HashMap<>();
-            claims.put("username", user.getUsername());
+            claims.put("userId", user.getId());
             String jwt = JwtUtil.createJWT(jwtProperties.getUserSecretKey(), jwtProperties.getUserTtl(), claims);
             return Result.success(jwt);
         }
@@ -97,6 +97,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public TalkVo selectTalk(TalkDto talkDto) {
         return userMapper.findTalkById(talkDto);
+    }
+
+    @Override
+    public List<TalkVo> getTalks(int userId) {
+        return userMapper.getTalks(userId);
     }
 
 }

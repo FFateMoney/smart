@@ -1,9 +1,13 @@
 package com.smart.pojo.vo;
+import org.springframework.stereotype.Component;
+import java.io.Serializable;
 
-public class TalkVo {
+@Component
+public class TalkVo  implements Serializable {
     private int id;
     private String title;
-    private String content;
+
+
 
 
 }

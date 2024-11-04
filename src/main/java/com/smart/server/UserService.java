@@ -9,6 +9,7 @@ import org.apache.hc.core5.http.ParseException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 
 public interface UserService {
     Result register(UserDto userDto);
@@ -17,4 +18,6 @@ public interface UserService {
     String talk(String text) throws URISyntaxException, IOException, ParseException;
 
     TalkVo selectTalk(TalkDto talkDto);
+
+    List<TalkVo> getTalks(int userId);
 }

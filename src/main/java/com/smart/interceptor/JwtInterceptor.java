@@ -43,11 +43,13 @@ public class JwtInterceptor implements HandlerInterceptor {
         try {
             log.info("jwt校验:{}", token);
             Claims claims = JwtUtil.parseJWT(jwtProperties.getUserSecretKey(), token);
-            Integer id = (Integer) claims.get("id");
+            System.out.println("解析成功");
+            Integer id = (Integer) claims.get("userId");
 
-            log.info("当前用户为:{}", id);
+            System.out.println("当前用户为:{}"+ id);
 
             request.setAttribute("userId", id);
+            System.out.println(id);
             //3、通过，放行
             return true;
         } catch (Exception ex) {
