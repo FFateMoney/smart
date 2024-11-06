@@ -1,7 +1,10 @@
 server:
   port: 8080
 spring:
-
+  redis:
+    database: ${spring.redis.database}
+    host: ${spring.redis.host}
+    port: ${spring.redis.port}
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher

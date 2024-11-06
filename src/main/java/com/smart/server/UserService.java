@@ -20,4 +20,6 @@ public interface UserService {
     TalkVo selectTalk(TalkDto talkDto);
 
     List<TalkVo> getTalks(int userId);
+
+    TalkVo createTalk(Integer userId);
 }

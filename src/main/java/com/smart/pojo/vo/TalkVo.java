@@ -1,13 +1,18 @@
 package com.smart.pojo.vo;
-import org.springframework.stereotype.Component;
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 
-@Component
-public class TalkVo  implements Serializable {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Data
+public class TalkVo  {
     private int id;
     private String title;
-
-
-
-
+    private String content;
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
 }

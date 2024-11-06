@@ -1,19 +1,23 @@
 package com.smart.pojo.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.stereotype.Component;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-public class Talk {
+@Component
+public class Talk implements Serializable {
     private int id;
     private int userId;
     private String title;
     private String content;
-    private String createTime;
-    private String updateTime;
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
+
+
 }

@@ -8,3 +8,8 @@ smart:
     password: 123456
   ai:
     url: http://127.0.0.1:5000/talking
+spring:
+  redis:
+    host: 172.22.97.194
+    port: 6379
+    database: 0

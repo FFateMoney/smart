@@ -10,13 +10,16 @@ import com.smart.constants.RegexConstant;
 import com.smart.mapper.UserMapper;
 import com.smart.pojo.dto.TalkDto;
 import com.smart.pojo.dto.UserDto;
+import com.smart.pojo.entity.Talk;
 import com.smart.pojo.entity.User;
 import com.smart.pojo.vo.TalkVo;
 import com.smart.server.UserService;
 import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,9 +58,7 @@ public class UserServiceImpl implements UserService {
         if (password.length() < 6||password.length() > 16||!password.matches(RegexConstant.PASSWORD)) {
             return Result.error(MessageConstant.USERNAME_OR_PASSWORD_OUT_OF_RANGE);
         }
-
         user = new User();
-
         //md5摘要，生成32位密文
         String md5Pwd = DigestUtils.md5DigestAsHex((password).getBytes());
         user.setUsername(username);
@@ -66,7 +67,6 @@ public class UserServiceImpl implements UserService {
         return Result.success();
 
     }
-
 
     @Override
     public Result login(UserDto userDto) {
@@ -83,9 +83,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
-
-
     @Override
     public String talk(String text) throws URISyntaxException, IOException, ParseException {
         BasicNameValuePair param = new BasicNameValuePair("text", text);
@@ -95,13 +92,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+
     public TalkVo selectTalk(TalkDto talkDto) {
-        return userMapper.findTalkById(talkDto);
+        Talk talk = userMapper.findTalkById(talkDto);
+        TalkVo talkVo = new TalkVo();
+        talkVo.setId(-1);
+        if (talk != null) {
+            BeanUtils.copyProperties(talk, talkVo);
+        }
+        return talkVo;
     }
 
     @Override
     public List<TalkVo> getTalks(int userId) {
         return userMapper.getTalks(userId);
+    }
+
+    @Override
+    public TalkVo createTalk(Integer userId) {
+        Talk talk = Talk.builder().userId(userId).title("新建对话").build();
+        TalkVo talkVo = new TalkVo();
+        userMapper.createTalk(talk);
+        BeanUtils.copyProperties(talk, talkVo);
+        return talkVo;
     }
 
 }
