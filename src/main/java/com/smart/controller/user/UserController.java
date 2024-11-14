@@ -57,6 +57,8 @@ public class UserController {
         else return Result.error(MessageConstant.TALK_NOT_EXIT);
     }
 
+
+
     //还需要对聊天的数量进行限制
     @PostMapping("/createTalk")
     @ApiOperation("新建聊天")
