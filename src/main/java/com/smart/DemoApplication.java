@@ -1,5 +1,6 @@
 package com.smart;
 
+import com.smart.constants.SentConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -20,6 +21,7 @@ public class DemoApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
+
         log.info("服务开始运行");
     }
 
