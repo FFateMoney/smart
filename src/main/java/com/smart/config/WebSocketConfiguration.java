@@ -2,6 +2,7 @@ package com.smart.config;
 
 import com.smart.handler.ChatHandler;
 import com.smart.interceptor.WebSocketInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -12,10 +13,12 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 @Configuration
 @EnableWebSocket
 public class WebSocketConfiguration implements WebSocketConfigurer {
+    @Autowired
+    ChatHandler chatHandler;
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new ChatHandler(), "/user/talk").setAllowedOrigins("*")
-                .addInterceptors(new WebSocketInterceptor());
+        registry.addHandler(chatHandler, "/user/talk").setAllowedOrigins("*");
+               // .addInterceptors(new WebSocketInterceptor());
     }
 
     @Bean
@@ -25,4 +28,6 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
         container.setMaxBinaryMessageBufferSize(10000);
         return container;
     }
+
+
 }

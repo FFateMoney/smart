@@ -13,7 +13,10 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.net.URIBuilder;
 
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +44,45 @@ public class HttpUtil {
         return res;
     }
 
+    public static void doGetWithSSE(String url, List<NameValuePair> params) throws URISyntaxException, IOException, ParseException {
+        // 创建URI对象，并且添加查询参数
+        URIBuilder uriBuilder = new URIBuilder(url);
+        uriBuilder = uriBuilder.addParameters(params);
 
+
+        // 创建HttpGet请求
+        HttpGet httpGet = new HttpGet(uriBuilder.build());
+        httpGet.addHeader("Accept", "text/event-stream");  // 设置接受SSE事件流
+
+        // 创建HttpClient
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+
+        // 执行请求
+        CloseableHttpResponse response = httpclient.execute(httpGet);
+
+        try {
+            // 获取响应的实体流
+            HttpEntity entity = response.getEntity();
+            // 如果返回的实体内容是流式的
+            if (entity != null) {
+                // 读取实体流
+                InputStream inputStream = entity.getContent();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                // 持续读取流中的每一行数据
+                while ((line = reader.readLine()) != null) {
+                    // SSE事件的处理：每个事件行通常以 "data: " 开头
+                    if (line.startsWith("data: ")) {
+                        String eventData = line.substring(6).trim();  // 提取事件数据部分
+                        System.out.println("Received event: " + eventData);
+                    }
+                }
+            }
+        } finally {
+            httpclient.close();  // 关闭httpclient连接
+        }
+    }
 
 
 }

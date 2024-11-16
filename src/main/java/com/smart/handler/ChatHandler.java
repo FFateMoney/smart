@@ -1,6 +1,7 @@
 package com.smart.handler;
 
 import org.springframework.messaging.simp.user.SimpUserRegistry;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.springframework.web.socket.TextMessage;
@@ -9,9 +10,8 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
+@Component
 public class ChatHandler extends TextWebSocketHandler {
-    private SimpUserRegistry simpUserRegistry;
 
     // 使用一个 Map 来存储 token 与 WebSocketSession 的映射
     private static final ConcurrentHashMap<Integer, WebSocketSession> userSessions = new ConcurrentHashMap<>();
@@ -19,37 +19,37 @@ public class ChatHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         //在这里做一个键值对存到redis里，键是用户id，存在 attributes里面，值是session.以方便后续取session
+        /*
         Map<String, Object> attributes = session.getAttributes();
         Integer userId = (Integer) attributes.get("userId");
         userSessions.put(userId, session);
+         */
+        System.out.println("连接成功"+session.getId());
     }
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
 
-        Integer userId = Integer.parseInt((String) session.getAttributes().get("userId"));
-        if (userId != -1) {
-            //为用户，此处检查 redis中的ai状态
-            if (false) {
-                return;
-            }
-            payload = "用户："+payload;
-            //添加进历史记录
-
-            //给ai发送信息
-            session.sendMessage(new TextMessage(userId +"\n"+payload));
-
+        //Integer userId = Integer.parseInt((String) session.getAttributes().get("userId"));
+        System.out.println("收到消息"+message.getPayload());
+        System.out.println("当前线程为："+Thread.currentThread().getId());
+        Thread.sleep(4000);
+        if (false) {
+            return;
         }
-        else {
-            //TODO 此处需要解决问题，如果ai是一个一个字返回的，且有多个用户，应该如何识别每个字的归属用户？
-            String[] split = payload.split("\n", 1);
-            payload = "AI："+payload;
+        //payload = "用户："+payload;
+        //添加进历史记录
 
-        }
-
+        //给ai发送信息
+        //session.sendMessage(new TextMessage(userId +"\n"+payload));
 
 
+
+        //TODO 此处需要解决问题，如果ai是一个一个字返回的，且有多个用户，应该如何识别每个字的归属用户？
+        //String[] split = payload.split("\n", 1);
+        //payload = "AI："+payload;
+        
         /*
         1.首先获取session的用户id，然后判断这个用户是ai还是普通用户
         如果是ai：
@@ -69,9 +69,5 @@ public class ChatHandler extends TextWebSocketHandler {
         //移除redis里面的键值对
     }
 
-    private String getTokenFromSession(WebSocketSession session) {
-        // 这里假设 token 保存在 WebSocketSession 的属性中
-        return (String) session.getAttributes().get("token");
-    }
+
 }
-//TODO 如何根据sessionId获取session？

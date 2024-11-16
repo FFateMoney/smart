@@ -68,7 +68,7 @@ public class UserController {
     }
 
     //TODO AI部署好再完善
-    @PutMapping("/talk")
+    //@PutMapping("/talk")
     @ApiOperation("对话接口")
     public Result talk(@RequestBody String text) throws URISyntaxException, IOException, ParseException {
         String response = userService.talk(text);
