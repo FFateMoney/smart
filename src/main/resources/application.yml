@@ -25,6 +25,7 @@ spring:
     database: ${spring.redis.database}
 
 
+
 mybatis:
   #mapper配置文件
   mapper-locations: classpath:mapper/*.xml
@@ -41,8 +42,9 @@ logging:
         controller: info
 smart:
   jwt:
-    user-secret-key: 407Team
-    user-token-name: token
-    user-ttl: 7200000
+    user-secret-key: ${smart.jwt.user-secret-key}
+    user-token-name: ${smart.jwt.user-token-name}
+    user-ttl: ${smart.jwt.user-ttl}
+    talk-token-name: ${smart.jwt.talk-token-name}}
   ai:
     url: ${smart.ai.url}

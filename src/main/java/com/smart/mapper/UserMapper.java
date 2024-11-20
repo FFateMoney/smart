@@ -7,10 +7,7 @@ import com.smart.pojo.dto.UserDto;
 import com.smart.pojo.entity.Talk;
 import com.smart.pojo.entity.User;
 import com.smart.pojo.vo.TalkVo;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
@@ -44,4 +41,9 @@ public interface UserMapper {
     @Insert("insert into talk (user_id,title,create_time,update_time) values (#{userId},#{title},#{createTime},#{updateTime}) ")
     @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
     void createTalk(Talk talk);
+
+    //更新聊天记录
+    @AutoFill(operationType = OperationConstant.UPDATE)
+    @Update("update talk set content = #{content} where user_id = #{userId} &&talk.id = #{id}")
+    void updateTalk(Talk talk);
 }

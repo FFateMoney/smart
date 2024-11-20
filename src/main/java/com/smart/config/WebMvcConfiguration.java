@@ -1,6 +1,7 @@
 package com.smart.config;
 
 import com.smart.interceptor.JwtInterceptor;
+import com.smart.interceptor.WebSocketInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -21,7 +23,6 @@ public class WebMvcConfiguration  extends WebMvcConfigurationSupport {
 
     @Autowired
     private JwtInterceptor jwtInterceptor;
-
     /**
      * 注册自定义拦截器
      *
@@ -32,7 +33,9 @@ public class WebMvcConfiguration  extends WebMvcConfigurationSupport {
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/user/**")
                 .excludePathPatterns("/user/register","/user/login","/user/logout","/user/talk");
+
     }
+
 
 
     /**

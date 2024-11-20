@@ -13,6 +13,7 @@ public class TalkVo  {
     private int id;
     private String title;
     private String content;
+    private String talkToken;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 }

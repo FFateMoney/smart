@@ -15,7 +15,7 @@ public interface UserService {
     Result register(UserDto userDto);
     Result login(UserDto userDto);
 
-    String talk(String text) throws URISyntaxException, IOException, ParseException;
+    //String talk(String text) throws URISyntaxException, IOException, ParseException;
 
     TalkVo selectTalk(TalkDto talkDto);
 

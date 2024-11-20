@@ -6,8 +6,14 @@ smart:
     database: smart
     username: fate
     password: 123456
+  jwt:
+    user-secret-key: 407Team
+    user-token-name: token
+    user-ttl: 7200000
+    talk-token-name: talkToken
   ai:
     url: http://127.0.0.1:5000/talking
+    cache-name: talks
 spring:
   redis:
     host: 172.22.97.194

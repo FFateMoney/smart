@@ -9,5 +9,5 @@ import org.springframework.stereotype.Component;
 @Data
 public class TalkProperties {
     private String url;
-
+    private String cacheName;
 }

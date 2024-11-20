@@ -7,6 +7,7 @@ import com.smart.common.properties.TalkProperties;
 import com.smart.common.result.Result;
 import com.smart.constants.MessageConstant;
 import com.smart.constants.RegexConstant;
+import com.smart.constants.SentConstant;
 import com.smart.mapper.UserMapper;
 import com.smart.pojo.dto.TalkDto;
 import com.smart.pojo.dto.UserDto;
@@ -83,6 +84,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /*
     @Override
     public String talk(String text) throws URISyntaxException, IOException, ParseException {
         BasicNameValuePair param = new BasicNameValuePair("text", text);
@@ -90,15 +92,21 @@ public class UserServiceImpl implements UserService {
         params.add(param);
         return HttpUtil.doGet(talkProperties.getUrl(), params);
     }
+    */
+
+    //在此方法中发放第二个token,即对话token，包含了一个对话的id
 
     @Override
-
     public TalkVo selectTalk(TalkDto talkDto) {
         Talk talk = userMapper.findTalkById(talkDto);
         TalkVo talkVo = new TalkVo();
         talkVo.setId(-1);
         if (talk != null) {
             BeanUtils.copyProperties(talk, talkVo);
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("talkId", talk.getId());
+            String jwt = JwtUtil.createJWT(jwtProperties.getUserSecretKey(), jwtProperties.getUserTtl(), claims);
+            talkVo.setTalkToken(jwt);
         }
         return talkVo;
     }

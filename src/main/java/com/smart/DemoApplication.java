@@ -1,19 +1,16 @@
 package com.smart;
 
-import com.smart.constants.SentConstant;
 import lombok.extern.slf4j.Slf4j;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication()
 @EnableTransactionManagement
 @Slf4j
+@EnableScheduling
 //@MapperScan("com.smart.mapper")
 //@ComponentScan({"com.smart.*"})
 @EnableCaching

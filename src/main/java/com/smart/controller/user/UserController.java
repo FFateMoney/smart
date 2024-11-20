@@ -67,7 +67,7 @@ public class UserController {
         return Result.success(talkVo);
     }
 
-    //TODO AI部署好再完善
+    /*
     //@PutMapping("/talk")
     @ApiOperation("对话接口")
     public Result talk(@RequestBody String text) throws URISyntaxException, IOException, ParseException {
@@ -75,4 +75,10 @@ public class UserController {
 
         return Result.success(response);
     }
+    */
+
+    //处理握手请求
+    @RequestMapping(value = "/socket.io", method = RequestMethod.OPTIONS)
+    public void handleOptionsRequest(){}
+
 }
