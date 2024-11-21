@@ -30,18 +30,24 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
             return false;
         }
 
-        //1、从请求头中获取令牌
+        //1、从请求参数中获取令牌
+        ServletServerHttpRequest sq = (ServletServerHttpRequest) serverHttpRequest;
+        String userToken = sq.getServletRequest().getParameter("userToken");
+        String talkToken = sq.getServletRequest().getParameter("talkToken");
+        /*
         HttpHeaders headers = serverHttpRequest.getHeaders();
         List<String> userTokens = headers.get(jwtProperties.getUserTokenName());
         List<String> talkTokens = headers.get(jwtProperties.getTalkTokenName());
         String userToken = userTokens.get(0);
         String talkToken = talkTokens.get(0);
+         */
+
         //2、校验令牌
         try {
             log.info("用户jwt校验:{}", userToken);
             log.info("对话jwt校验:{}", talkToken);
             Claims userTokenClaims = JwtUtil.parseJWT(jwtProperties.getUserSecretKey(), userToken);
-            Claims talkTokenClaims = JwtUtil.parseJWT(jwtProperties.getTalkTokenName(), talkToken);
+            Claims talkTokenClaims = JwtUtil.parseJWT(jwtProperties.getUserSecretKey(), talkToken);
             log.info("解析成功");
             Integer userId = (Integer) userTokenClaims.get("userId");
             Integer talkId = (Integer) talkTokenClaims.get("talkId");

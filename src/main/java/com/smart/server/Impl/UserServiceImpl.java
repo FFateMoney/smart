@@ -1,13 +1,11 @@
 package com.smart.server.Impl;
 
-import com.smart.Util.HttpUtil;
 import com.smart.Util.JwtUtil;
 import com.smart.common.properties.JwtProperties;
 import com.smart.common.properties.TalkProperties;
 import com.smart.common.result.Result;
 import com.smart.constants.MessageConstant;
 import com.smart.constants.RegexConstant;
-import com.smart.constants.SentConstant;
 import com.smart.mapper.UserMapper;
 import com.smart.pojo.dto.TalkDto;
 import com.smart.pojo.dto.UserDto;
@@ -15,20 +13,12 @@ import com.smart.pojo.entity.Talk;
 import com.smart.pojo.entity.User;
 import com.smart.pojo.vo.TalkVo;
 import com.smart.server.UserService;
-import org.apache.hc.core5.http.NameValuePair;
-import org.apache.hc.core5.http.ParseException;
-import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.GetMapping;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.http.HttpClient;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +31,8 @@ public class UserServiceImpl implements UserService {
     JwtProperties jwtProperties;
     @Autowired
     TalkProperties talkProperties;
+    @Autowired
+    RedisTemplate redisTemplate;
 
     @Override
     public Result register(UserDto userDto) {
@@ -102,11 +94,15 @@ public class UserServiceImpl implements UserService {
         TalkVo talkVo = new TalkVo();
         talkVo.setId(-1);
         if (talk != null) {
+            //做属性复制，生成JWT令牌，把聊天记录缓存进redis
             BeanUtils.copyProperties(talk, talkVo);
             Map<String, Object> claims = new HashMap<>();
             claims.put("talkId", talk.getId());
             String jwt = JwtUtil.createJWT(jwtProperties.getUserSecretKey(), jwtProperties.getUserTtl(), claims);
             talkVo.setTalkToken(jwt);
+
+            redisTemplate.opsForValue().set(talkProperties.getCacheName() + "::" + talkDto.getUserId(), talk.getContent()+"\n");
+
         }
         return talkVo;
     }

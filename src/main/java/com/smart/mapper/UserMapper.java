@@ -28,7 +28,7 @@ public interface UserMapper {
     User login(UserDto userDto);
 
     //根据用户id和对话id查询聊天记录
-    @Cacheable(cacheNames = "talks",key = "#talkDto.userId")
+   // @Cacheable(cacheNames = "talks",key = "#talkDto.userId")
     @Select("select talk.id,talk.content,create_time,update_time from smart.talk where user_id = #{userId} and id = #{id}")
     Talk findTalkById(TalkDto talkDto);
 

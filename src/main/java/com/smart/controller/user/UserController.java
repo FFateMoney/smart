@@ -77,8 +77,6 @@ public class UserController {
     }
     */
 
-    //处理握手请求
-    @RequestMapping(value = "/socket.io", method = RequestMethod.OPTIONS)
-    public void handleOptionsRequest(){}
+
 
 }

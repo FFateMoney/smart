@@ -1,5 +1,7 @@
 package com.smart.handler;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.smart.common.properties.TalkProperties;
 import com.smart.constants.SentConstant;
 import com.smart.mapper.UserMapper;
@@ -14,14 +16,12 @@ import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.net.URIBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.CloseStatus;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +41,7 @@ public class ChatHandler extends TextWebSocketHandler {
     @Autowired
     TalkProperties talkProperties;
 
-    @Qualifier("redisTemplate")
+
     @Autowired
     private RedisTemplate redisTemplate;
     
@@ -57,27 +57,28 @@ public class ChatHandler extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
        log.info("收到消息{}",session.getAttributes().get("userId"));
-        String payload = message.getPayload();
-        Integer userId = Integer.parseInt((String) session.getAttributes().get("userId"));
+         String content = processMessage(message.getPayload());
+
+        Integer userId = (Integer) session.getAttributes().get("userId");
         List<NameValuePair> params = new ArrayList<NameValuePair>();
 
         //此处追加了历史记录
-        redisTemplate.opsForValue().append(talkProperties.getCacheName()+"::"+userId, "用户："+payload+"\n");
+        redisTemplate.opsForValue().append(talkProperties.getCacheName()+"::"+userId, "用户："+content+"\n");
 
         params.add(new BasicNameValuePair("userId", userId.toString()));
-        params.add(new BasicNameValuePair("message", payload));
+        params.add(new BasicNameValuePair("message", content));
 
         //暂时先不转发给ai
         //doGetWithSSE(talkProperties.getUrl(),params);
-
-
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-
-        String content = (String) redisTemplate.opsForValue().getAndDelete(talkProperties.getCacheName() + "::" + session.getAttributes().get("userId"));
-        Talk talk = Talk.builder().userId((Integer) session.getAttributes().get("userId")).id((Integer) session.getAttributes().get("userId")).content(content).build();
+        String content = (String) redisTemplate.opsForValue().get(talkProperties.getCacheName() + "::" + session.getAttributes().get("userId"));
+        redisTemplate.delete(talkProperties.getCacheName() + "::" + session.getAttributes().get("userId"));
+        Integer userId = (Integer) session.getAttributes().get("userId");
+        Integer id = (Integer) session.getAttributes().get("talkId");
+        Talk talk = Talk.builder().id(id).userId(userId).content(content).build();
         userMapper.updateTalk(talk);
         SentConstant.concurrentHashMap.remove(session.getAttributes().get("userId"));
 
@@ -170,5 +171,10 @@ public class ChatHandler extends TextWebSocketHandler {
         map.put("eventId", eventId);
         return map;
 
+    }
+    private String processMessage(String message) {
+        JSONObject jsonObject = (JSONObject) JSON.parse(message);
+        String content = jsonObject.getString("content");
+        return content;
     }
 }
